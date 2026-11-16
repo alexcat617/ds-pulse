@@ -8,7 +8,7 @@
 
 ## 1. What this project is
 
-**DS Pulse** is a browser-based **design system linter**: a Chrome extension that scans a real page, compares visible UI against a **token file** (colors, type scale, radii, component classes), and shows **compliance %**, a **violation list**, and **on-page highlights**.
+**DS Pulse** is a browser-based **design system linter**: a Chrome extension that scans a real page, compares visible UI against a **token file** (primitives + optional **component recipes**), and shows **compliance %**, a **violation list**, and **on-page highlights**.
 
 It is built as a **portfolio / prototype**, not a shipped SaaS product. The repo has two halves:
 
@@ -25,7 +25,7 @@ It is built as a **portfolio / prototype**, not a shipped SaaS product. The repo
 
 ## 2. What we built (delivery waves)
 
-Work was shipped in four features (FEAT-00–04) plus a small fix PR for scan reliability and side-panel styling.
+Work shipped in **FEAT-00–05** plus a fix PR for scan reliability and side-panel styling (see [FEATURES.md](../FEATURES.md) for merge status).
 
 ### Wave A — Target experience
 
@@ -54,8 +54,14 @@ Work was shipped in four features (FEAT-00–04) plus a small fix PR for scan re
 
 ### Wave D — Semantic components (FEAT-05)
 
-- **Primary / secondary** button variants (`.ds-btn--primary`, `.ds-btn--secondary`; plain `.ds-btn` → primary).
-- Violations cite **variant + token**, e.g. `primary backgroundColor → colors.primary (#4F46E5)`.
+| Delivered | Meaning |
+|-----------|---------|
+| FEAT-05 | **Button variants** in `tokens.json` (`components.button`): **primary** and **secondary** recipes |
+| Demo | **Upgrade** / **Sync** use `.ds-btn--primary`; **Apply** uses `.ds-btn--secondary`; CSS split by variant |
+| Audit | For `.ds-btn` buttons, **Expected** names variant + token, e.g. `primary backgroundColor → colors.primary (#4F46E5)` |
+| Fallback | Any `.ds-btn` **without** `--secondary` resolves to **primary** (including legacy plain `.ds-btn`) |
+
+PR: [FEAT-05 component variants](https://github.com/alexcat617/ds-pulse/pull/8) — merge to land on `main`.
 
 ### What you can do today (demo flow)
 
@@ -69,21 +75,48 @@ Work was shipped in four features (FEAT-00–04) plus a small fix PR for scan re
 
 ## 3. How the linter thinks (as built)
 
-Understanding these limits explains both **false positives** and **vague copy** in the UI.
+Understanding **tokens vs components** and the **two audit modes** explains what you see in the side panel.
 
-### Token rules (from `tokens.json`)
+### Tokens vs components (in this repo)
 
-- **Colors:** flat list of approved hex values (primary, surface, text, etc.).
-- **Typography:** allowed `font-size` values only.
-- **Radius:** allowed `border-radius` values only.
-- **Components:** `<button>` must use class `ds-btn`; `<input>` must use `ds-input`; plus audit of headings, paragraphs, spans, links, and anything with a `ds-*` class.
+| | **Tokens** (`colors`, `fontSizes`, …) | **Components** (`components.button`, class rules) |
+|---|--------------------------------------|---------------------------------------------------|
+| **What** | Approved **values** (hex, px, …) | **Recipes** — which tokens belong on which control / variant |
+| **Example** | `primary: #4F46E5`, `border: #E2E8F0` | Primary button: bg → `primary`, text → `surface` |
+| **FEAT-03** | Flat allow-list for color, type, radius | “`<button>` needs `.ds-btn`” |
+| **FEAT-05** | Same primitives, referenced by name in recipes | **Primary / secondary** bindings for `.ds-btn` |
 
-### Color checks are palette-wide, not semantic
+### Layer 1 — Global token rules (most elements)
 
-The engine asks: *“Is this computed color one of the token hex values?”*  
-It does **not** ask: *“Should this **primary** button use `colors.primary`?”*
+- **Colors** (`color`, `backgroundColor`, **`borderColor`** on audited nodes): value must be **some** token hex, unless a semantic component rule applies to that property.
+- **Typography:** `font-size` must be on the scale.
+- **Radius:** `border-radius` must be on the scale.
+- **Class gates:** raw `<button>` / `<input>` must have `.ds-btn` / `.ds-input`; other tags with `ds-*` classes are audited too.
 
-So **Expected** often shows **“Approved token color”** — meaning *any* token color would pass, not *which* token is correct for that control. That is **intentionally simple** for the prototype; see [section 5](#5-making-this-robust-for-a-mature-design-system).
+For failures here, **Expected** is often **“Approved token color”** (or a comma list for type/radius).
+
+**Example:** unstyled search `<input>` (no `.ds-input`) → **Component** (missing class) **and** **Color** (browser default border e.g. `#767676` not in the palette). That border check is **not** semantic input styling — it is palette-wide.
+
+### Layer 2 — Button variant rules (`.ds-btn` only)
+
+When an element has **`ds-btn`**, the engine loads `components.button` from `tokens.json`:
+
+| Variant | How it’s detected | Default bindings (FEAT-05) |
+|---------|-------------------|----------------------------|
+| **primary** | `ds-btn--primary`, or plain `ds-btn` (fallback) | `backgroundColor` → `primary`, `color` → `surface` |
+| **secondary** | `ds-btn--secondary` | `backgroundColor` → `surface`, `color` → `textPrimary`, `borderColor` → `border` |
+
+Mismatch → **Expected** like: `primary backgroundColor → colors.primary (#4F46E5)`.
+
+Those properties are checked **semantically**; they are **not** double-checked with the generic palette message for the same CSS property.
+
+**Demo:** **Sync data** (primary + drift CSS) shows semantic primary background failure; **Apply** (secondary, compliant) should pass variant checks.
+
+### What is still not semantic
+
+- **Inputs, badges, cards** — palette + class only (no `components.input` yet).
+- **Hover / focus** — snapshot only; `primaryHover` is in tokens but not enforced on `:hover`.
+- See [section 5](#5-making-this-robust-for-a-mature-design-system) for the rest of the maturity path.
 
 ### Snapshot, not full state coverage
 
@@ -113,7 +146,7 @@ This section is how you **use** DS Pulse (or a future version) while building UI
    Copy or extend `demo-app/tokens.json` (or your product’s token JSON). Treat it as the contract the linter enforces.
 
 2. **Prototype in HTML/CSS or your app**  
-   Use token variables (e.g. Apex’s `ds.css` pattern) and **allowed component classes** (`ds-btn`, `ds-card`, …).
+   Use token variables (e.g. Apex’s `ds.css` pattern), **component classes** (`ds-btn`, `ds-input`, …), and **variant modifiers** where defined (`ds-btn--primary`, `ds-btn--secondary`).
 
 3. **Run the app locally**  
    Same origin you’ll scan (e.g. `http://localhost:3000` or your Vite/Next dev URL).
@@ -156,13 +189,13 @@ The current build is a **v1 portfolio demo**. Below is a practical roadmap from 
 
 ### 5.1 Richer “Expected” and semantic rules
 
-| Today | Mature direction |
-|-------|------------------|
-| `Expected: Approved token color` | `Expected: colors.primary (#4F46E5) for .ds-btn background` |
-| Any palette hex OK on any element | **Role bindings**: button primary/secondary/ghost, text default/muted, surface/card |
-| One rule for all `<button>` | Rules keyed off **class variants** (e.g. `.ds-btn--secondary`) |
+| Status | Area |
+|--------|------|
+| **Done (FEAT-05)** | Button **primary / secondary** in `tokens.json` → semantic Expected lines |
+| **Still generic** | Non-button elements; unstyled native controls; missing DS classes |
+| **Next** | `components.input`, `components.badge`, ghost/danger button variants, hover states |
 
-**Implementation sketch:** extend `tokens.json` with a `rules` or `components` section (per-variant allowed tokens per CSS property), or import Style Dictionary / Tokens Studio output.
+**Implementation sketch for more components:** repeat the FEAT-05 pattern in `components.*` with `matchAnyClass` + `default` token bindings, or import Style Dictionary / Tokens Studio output.
 
 ### 5.2 States and interaction
 
@@ -215,17 +248,14 @@ Each needs explicit audit rules (computed margin/padding, `box-shadow`, `transit
 ## 6. Architecture reference (for handoff)
 
 ```
-demo-app/tokens.json  ──copy──►  extension/public/tokens.json
-                                         │
-                                         ▼
-              Content script: DOM walk → audit engine (lib/audit/)
-                                         │
-                    ┌────────────────────┴────────────────────┐
-                    ▼                                         ▼
-            Side panel (score + list)              Overlay (shadow DOM)
+demo-app/tokens.json  ──bundled──►  content script (lib/audit/)
+     │                                      │
+     │  colors, fontSizes, borderRadii      │  DOM walk + variant resolve
+     │  components.button.variants          ▼
+     └──────────────────────────►  violations → side panel + overlays
 ```
 
-- **Audit engine:** pure TypeScript; unit-tested with fixtures mirroring the demo’s 7 violations.
+- **Audit engine:** pure TypeScript; unit-tested with fixtures mirroring the demo’s 7 violations + secondary button pass case.
 - **Messages:** `chrome.tabs.sendMessage` between side panel and content script.
 - **Build:** WXT (`npm run build` → `.output/chrome-mv3`).
 
@@ -238,8 +268,9 @@ demo-app/tokens.json  ──copy──►  extension/public/tokens.json
 | Chrome test checklist | [GIT-WORKFLOW.md](GIT-WORKFLOW.md) |
 | Token list | [PROJECT-SPEC.md](PROJECT-SPEC.md) |
 | Violation checklist (demo) | Comment at bottom of `demo-app/index.html` |
+| Button variants spec | [FEAT-05](../features/FEAT-05-component-variants.md) |
 | Build extension | `cd extension && npm run build` |
 
 ---
 
-*Last aligned with repo state: FEAT-00–04 on `main`, scan/token bundle fix merged (PR #7). Update this doc when tokens or audit rules change materially.*
+*Last aligned with repo state: FEAT-00–04 on `main`; FEAT-05 on branch / [PR #8](https://github.com/alexcat617/ds-pulse/pull/8); scan/token bundle fix (PR #7). Update when FEAT-05 merges or rules change materially.*
