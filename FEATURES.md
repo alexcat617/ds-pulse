@@ -19,9 +19,9 @@ Work item shape: Outcome → Requirements → Acceptance criteria → Build hand
 |----|---------|------|--------|--------|
 | [FEAT-00](features/FEAT-00-foundation.md) | Foundation: repo, docs, workflow | A | `done` | `feat/feat-00-foundation` |
 | [FEAT-01](features/FEAT-01-demo-app.md) | Apex UI demo + 7 violations | A | `done` | `feat/feat-01-demo-app` |
-| [FEAT-02](features/FEAT-02-side-panel-bridge.md) | Extension shell + DOM count bridge | B | `building` | `feat/feat-02-side-panel-bridge` |
-| [FEAT-03](features/FEAT-03-audit-engine.md) | Auditor, score, violation list | B | `ready` | `feat/feat-03-audit-engine` |
-| [FEAT-04](features/FEAT-04-overlays.md) | Shadow overlays + interaction | C | `ready` | `feat/feat-04-overlays` |
+| [FEAT-02](features/FEAT-02-side-panel-bridge.md) | Extension shell + DOM count bridge | B | `done` | `feat/feat-02-side-panel-bridge` |
+| [FEAT-03](features/FEAT-03-audit-engine.md) | Auditor, score, violation list | B | `building` | `feat/feat-03-audit-engine` |
+| [FEAT-04](features/FEAT-04-overlays.md) | Shadow overlays + interaction | C | `building` | `feat/feat-04-overlays` |
 
 **Status values:** `draft` → `ready` → `building` → `done` (merged to `main`)
 
@@ -55,3 +55,5 @@ Work item shape: Outcome → Requirements → Acceptance criteria → Build hand
 | 2026-11-16 | FEAT-00 merged to `main`; public repo live |
 | 2026-11-16 | FEAT-01 Apex UI demo app (`demo-app/`) |
 | 2026-11-16 | FEAT-02 extension shell + DOM count bridge (PR open) |
+| 2026-11-16 | FEAT-03 audit engine + violation list (PR open) |
+| 2026-11-16 | FEAT-04 overlays + highlight interaction (PR open) |

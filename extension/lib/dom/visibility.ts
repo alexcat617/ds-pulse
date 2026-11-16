@@ -21,6 +21,24 @@ export function isElementVisible(el: Element): boolean {
   return rect.width > 0 || rect.height > 0;
 }
 
+export function shouldAuditElement(el: Element): boolean {
+  const tag = el.tagName;
+  if (shouldSkipTag(tag)) return false;
+  if (
+    tag === "BUTTON" ||
+    tag === "INPUT" ||
+    tag === "H1" ||
+    tag === "H2" ||
+    tag === "H3" ||
+    tag === "P" ||
+    tag === "SPAN" ||
+    tag === "A"
+  ) {
+    return true;
+  }
+  return Array.from(el.classList).some((c) => c.startsWith("ds-"));
+}
+
 export function countVisibleElements(root: ParentNode): number {
   let count = 0;
   for (const el of Array.from(root.querySelectorAll("*"))) {
