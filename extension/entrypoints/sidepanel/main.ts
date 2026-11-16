@@ -1,16 +1,23 @@
-import type { AuditResult } from "../../lib/audit/types";
+import type { AuditResult, Violation } from "../../lib/audit/types";
 import type { ContentMessage, ContentResponse } from "../../lib/messages";
 
 const complianceEl = document.getElementById("compliance");
 const metaEl = document.getElementById("meta");
 const listEl = document.getElementById("violations");
 const scanBtn = document.getElementById("scan-btn");
+const clearBtn = document.getElementById("clear-btn");
+const highlightAllEl = document.getElementById(
+  "highlight-all",
+) as HTMLInputElement | null;
+
+let lastResult: AuditResult | null = null;
 
 function setMeta(text: string): void {
   if (metaEl) metaEl.textContent = text;
 }
 
 function renderResult(result: AuditResult): void {
+  lastResult = result;
   if (complianceEl) complianceEl.textContent = `${result.compliancePercent}%`;
   setMeta(
     `${result.violations.length} violation(s) · ${result.nodesScanned} nodes audited · ${result.visibleElementCount} visible elements`,
@@ -23,6 +30,14 @@ function renderResult(result: AuditResult): void {
     li.dataset.violationId = v.id;
     li.dataset.nodeId = v.nodeId;
     li.innerHTML = `<strong>${v.ruleCategory}</strong> &lt;${v.tagName.toLowerCase()}&gt;<br><span class="pair"><span>Expected</span> ${escapeHtml(v.expected)}</span><br><span class="pair"><span>Actual</span> ${escapeHtml(v.actual)}</span>`;
+    li.tabIndex = 0;
+    li.addEventListener("click", () => void focusViolation(v));
+    li.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        void focusViolation(v);
+      }
+    });
     listEl.appendChild(li);
   }
 }
@@ -71,9 +86,61 @@ async function runScan(): Promise<void> {
       return;
     }
     renderResult(response.result);
+    if (highlightAllEl?.checked) {
+      await sendToTab(tabId, {
+        type: "SET_HIGHLIGHT_ALL",
+        enabled: true,
+        result: response.result,
+      });
+    }
   } catch (err) {
     setMeta(err instanceof Error ? err.message : "Scan failed");
   }
 }
 
+async function runClear(): Promise<void> {
+  try {
+    const tabId = await getActiveTabId();
+    await sendToTab(tabId, { type: "CLEAR_OVERLAYS" });
+    if (complianceEl) complianceEl.textContent = "--%";
+    if (listEl) listEl.innerHTML = "";
+    if (highlightAllEl) highlightAllEl.checked = false;
+    lastResult = null;
+    setMeta("Highlights cleared.");
+  } catch (err) {
+    setMeta(err instanceof Error ? err.message : "Clear failed");
+  }
+}
+
+async function focusViolation(v: Violation): Promise<void> {
+  try {
+    const tabId = await getActiveTabId();
+    await sendToTab(tabId, {
+      type: "FOCUS_VIOLATION",
+      nodeId: v.nodeId,
+      violationId: v.id,
+    });
+  } catch (err) {
+    setMeta(err instanceof Error ? err.message : "Focus failed");
+  }
+}
+
+async function toggleHighlightAll(enabled: boolean): Promise<void> {
+  if (!lastResult) return;
+  try {
+    const tabId = await getActiveTabId();
+    await sendToTab(tabId, {
+      type: "SET_HIGHLIGHT_ALL",
+      enabled,
+      result: lastResult,
+    });
+  } catch (err) {
+    setMeta(err instanceof Error ? err.message : "Highlight failed");
+  }
+}
+
 scanBtn?.addEventListener("click", () => void runScan());
+clearBtn?.addEventListener("click", () => void runClear());
+highlightAllEl?.addEventListener("change", () => {
+  void toggleHighlightAll(Boolean(highlightAllEl.checked));
+});

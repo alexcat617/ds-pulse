@@ -84,6 +84,15 @@ body {
   border: 1px solid #fecaca;
   background: #fef2f2;
   font-size: 12px;
+  cursor: pointer;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
 }
 
 .violations strong {

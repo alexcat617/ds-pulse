@@ -14,8 +14,8 @@ npm run typecheck
 
 Load **`.output/chrome-mv3-dev`** via `chrome://extensions` → **Load unpacked** (Developer mode on).
 
-## Behavior (FEAT-03)
+## Behavior
 
-- **Scan Current Page** runs the audit engine in `lib/audit/` against `public/tokens.json`.
-- Side panel shows **compliance %** and a violation list (Expected vs Actual).
-- Overlays and highlight toggle land in FEAT-04.
+- **Scan Current Page** → audit in `lib/audit/` vs `public/tokens.json`; side panel shows compliance **%** and violation list.
+- **Highlight all violations** draws red boxes in a closed shadow root (`#ds-linter-overlay-root`); boxes track scroll/resize.
+- Click a violation row → scroll to element and pulse highlight; **Clear** removes overlays.
