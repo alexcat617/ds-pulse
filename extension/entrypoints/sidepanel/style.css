@@ -64,7 +64,34 @@ body {
 }
 
 .meta {
-  margin: 0;
+  margin: 0 0 12px;
   font-size: 12px;
+  color: #64748b;
+}
+
+.violations {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.violations li {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  font-size: 12px;
+}
+
+.violations strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.pair span {
+  font-weight: 600;
   color: #64748b;
 }

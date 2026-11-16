@@ -14,8 +14,8 @@ npm run typecheck
 
 Load **`.output/chrome-mv3-dev`** via `chrome://extensions` → **Load unpacked** (Developer mode on).
 
-## FEAT-02 behavior
+## Behavior (FEAT-03)
 
-- Side panel shows compliance placeholder `--%` and **Scan Current Page**.
-- Content script counts **visible DOM elements** on the active tab and returns the count via `chrome.tabs.sendMessage`.
-- Token rules live in `public/tokens.json` (copied from `demo-app/tokens.json`); audit UI lands in FEAT-03.
+- **Scan Current Page** runs the audit engine in `lib/audit/` against `public/tokens.json`.
+- Side panel shows **compliance %** and a violation list (Expected vs Actual).
+- Overlays and highlight toggle land in FEAT-04.
