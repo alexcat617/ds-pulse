@@ -17,7 +17,7 @@ Work item shape: Outcome → Requirements → Acceptance criteria → Build hand
 
 | ID | Feature | Wave | Status | Branch |
 |----|---------|------|--------|--------|
-| [FEAT-00](features/FEAT-00-foundation.md) | Foundation: repo, docs, workflow | A | `building` | `feat/feat-00-foundation` |
+| [FEAT-00](features/FEAT-00-foundation.md) | Foundation: repo, docs, workflow | A | `done` | `feat/feat-00-foundation` |
 | [FEAT-01](features/FEAT-01-demo-app.md) | Apex UI demo + 7 violations | A | `ready` | `feat/feat-01-demo-app` |
 | [FEAT-02](features/FEAT-02-side-panel-bridge.md) | Extension shell + DOM count bridge | B | `ready` | `feat/feat-02-side-panel-bridge` |
 | [FEAT-03](features/FEAT-03-audit-engine.md) | Auditor, score, violation list | B | `ready` | `feat/feat-03-audit-engine` |
@@ -52,3 +52,4 @@ Work item shape: Outcome → Requirements → Acceptance criteria → Build hand
 | Date | Change |
 |------|--------|
 | 2026-11-16 | FEAT-00–04 initial delivery |
+| 2026-11-16 | FEAT-00 merged to `main`; public repo live |
