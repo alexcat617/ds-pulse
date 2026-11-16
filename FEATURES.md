@@ -20,8 +20,9 @@ Work item shape: Outcome → Requirements → Acceptance criteria → Build hand
 | [FEAT-00](features/FEAT-00-foundation.md) | Foundation: repo, docs, workflow | A | `done` | `feat/feat-00-foundation` |
 | [FEAT-01](features/FEAT-01-demo-app.md) | Apex UI demo + 7 violations | A | `done` | `feat/feat-01-demo-app` |
 | [FEAT-02](features/FEAT-02-side-panel-bridge.md) | Extension shell + DOM count bridge | B | `done` | `feat/feat-02-side-panel-bridge` |
-| [FEAT-03](features/FEAT-03-audit-engine.md) | Auditor, score, violation list | B | `building` | `feat/feat-03-audit-engine` |
-| [FEAT-04](features/FEAT-04-overlays.md) | Shadow overlays + interaction | C | `building` | `feat/feat-04-overlays` |
+| [FEAT-03](features/FEAT-03-audit-engine.md) | Auditor, score, violation list | B | `done` | `feat/feat-03-audit-engine` |
+| [FEAT-04](features/FEAT-04-overlays.md) | Shadow overlays + interaction | C | `done` | `feat/feat-04-overlays` |
+| [FEAT-05](features/FEAT-05-component-variants.md) | Button variant semantic audit | D | `building` | `feat/feat-05-component-variants` |
 
 **Status values:** `draft` → `ready` → `building` → `done` (merged to `main`)
 
@@ -34,6 +35,7 @@ Work item shape: Outcome → Requirements → Acceptance criteria → Build hand
 | **A: Target** | FEAT-00 → 01 | Repo on GitHub; demo dashboard with documented drift |
 | **B: Linter core** | FEAT-02 → 03 | Chrome extension scans demo; score + violation list |
 | **C: Visual proof** | FEAT-04 | On-page highlights, scroll-to-violation, resize sync |
+| **D: Semantic DS** | FEAT-05 | Button primary/secondary token bindings in violations |
 
 ---
 
@@ -57,3 +59,4 @@ Work item shape: Outcome → Requirements → Acceptance criteria → Build hand
 | 2026-11-16 | FEAT-02 extension shell + DOM count bridge (PR open) |
 | 2026-11-16 | FEAT-03 audit engine + violation list (PR open) |
 | 2026-11-16 | FEAT-04 overlays + highlight interaction (PR open) |
+| 2026-11-16 | FEAT-05 button variant semantic audit (PR open) |

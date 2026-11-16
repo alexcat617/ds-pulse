@@ -43,8 +43,8 @@
         </div>
         <div style="display: flex; gap: 12px; align-items: center">
           <button type="button" id="export-raw">Export</button>
-          <button type="button" class="ds-btn btn-drift">Sync data</button>
-          <button type="button" class="ds-btn">Upgrade</button>
+          <button type="button" class="ds-btn ds-btn--primary btn-drift">Sync data</button>
+          <button type="button" class="ds-btn ds-btn--primary">Upgrade</button>
         </div>
       </header>
 
@@ -78,12 +78,12 @@
             <option>EMEA</option>
           </select>
         </div>
-        <button type="button" class="ds-btn">Apply</button>
+        <button type="button" class="ds-btn ds-btn--secondary">Apply</button>
       </section>
     </div>
     <!--
       Planted violations (7) — verification checklist for DS Pulse:
-      1. Color — .btn-drift uses hardcoded background #3B82F6 (not in Apex palette).
+      1. Color — .btn-drift on primary button: background #3B82F6 (expected colors.primary).
       2. Typography — .subtitle-drift uses 13px (off type scale).
       3. Radius — .card-drift uses border-radius 20px (allowed: 6px, 12px).
       4. Component — #export-raw <button> missing .ds-btn.

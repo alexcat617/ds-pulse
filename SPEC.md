@@ -2,6 +2,7 @@
 
 | Layer | Doc |
 |-------|-----|
+| Summary + designer workflow | [docs/PROJECT-SUMMARY-AND-WORKFLOW.md](docs/PROJECT-SUMMARY-AND-WORKFLOW.md) |
 | Overview | [docs/PROJECT-SPEC.md](docs/PROJECT-SPEC.md) |
 | Features | [FEATURES.md](FEATURES.md) + [features/](features/) |
 | Git | [docs/GIT-WORKFLOW.md](docs/GIT-WORKFLOW.md) |
