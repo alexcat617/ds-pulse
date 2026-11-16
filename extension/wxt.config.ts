@@ -8,5 +8,11 @@ export default defineConfig({
     permissions: ["activeTab", "scripting", "sidePanel"],
     host_permissions: ["<all_urls>"],
     action: {},
+    web_accessible_resources: [
+      {
+        resources: ["tokens.json"],
+        matches: ["<all_urls>"],
+      },
+    ],
   },
 });
