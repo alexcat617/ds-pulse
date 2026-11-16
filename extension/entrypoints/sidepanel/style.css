@@ -1,0 +1,70 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  min-width: 320px;
+}
+
+.header__title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.header__subtitle {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.score {
+  margin: 20px 0;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.score__label {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.score__value {
+  margin: 4px 0 0;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.btn--primary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.meta {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+}
