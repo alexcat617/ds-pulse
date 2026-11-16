@@ -2,8 +2,10 @@ import { normalizeColorToHex } from "../color";
 import type {
   AuditNodeInput,
   AuditResult,
+  ButtonComponentSpec,
   RuleCategory,
   TokenRuleset,
+  VariantStyleTokens,
   Violation,
 } from "./types";
 
@@ -29,16 +31,85 @@ function normalizeRadius(radius: string): string {
   return first;
 }
 
-function auditNode(
+function resolveTokenHex(
+  rules: TokenRuleset,
+  tokenKey: string,
+): string | null {
+  const raw = rules.colors[tokenKey];
+  if (!raw) return null;
+  return normalizeColorToHex(raw);
+}
+
+function resolveButtonVariant(
+  classNames: string[],
+  spec: ButtonComponentSpec,
+): string {
+  if (spec.variants.secondary?.matchAnyClass.some((c) => classNames.includes(c))) {
+    return "secondary";
+  }
+  if (spec.variants.primary?.matchAnyClass.some((c) => classNames.includes(c))) {
+    return "primary";
+  }
+  return spec.fallbackVariant;
+}
+
+function auditButtonVariant(
   node: AuditNodeInput,
   rules: TokenRuleset,
+  spec: ButtonComponentSpec,
+): Violation[] {
+  if (!node.classNames.includes(spec.baseClass)) return [];
+
+  const variantName = resolveButtonVariant(node.classNames, spec);
+  const variant = spec.variants[variantName];
+  if (!variant) return [];
+
+  const violations: Violation[] = [];
+  const props = Object.keys(variant.default) as (keyof VariantStyleTokens)[];
+
+  for (const prop of props) {
+    const tokenKey = variant.default[prop];
+    if (!tokenKey) continue;
+
+    const expectedHex = resolveTokenHex(rules, tokenKey);
+    if (!expectedHex) continue;
+
+    const raw = node.computed[prop];
+    if (!raw) continue;
+
+    const actualHex = normalizeColorToHex(raw);
+    if (!actualHex) continue;
+
+    if (actualHex === expectedHex) continue;
+
+    violations.push({
+      id: nextViolationId(node.nodeId, "Color"),
+      tagName: node.tagName,
+      ruleCategory: "Color",
+      expected: `${variantName} ${prop} → colors.${tokenKey} (${expectedHex})`,
+      actual: `${prop}: ${actualHex}`,
+      nodeId: node.nodeId,
+    });
+  }
+
+  return violations;
+}
+
+function usesSemanticButton(node: AuditNodeInput, rules: TokenRuleset): boolean {
+  const spec = rules.components?.button;
+  if (!spec) return false;
+  return node.tagName === "BUTTON" && node.classNames.includes(spec.baseClass);
+}
+
+function auditGenericColors(
+  node: AuditNodeInput,
   colors: Set<string>,
+  skipProps: Set<string>,
 ): Violation[] {
   const violations: Violation[] = [];
-  const fonts = new Set(rules.fontSizes);
-  const radii = new Set(rules.borderRadii);
 
-  for (const prop of ["backgroundColor", "color"] as const) {
+  for (const prop of ["backgroundColor", "color", "borderColor"] as const) {
+    if (skipProps.has(prop)) continue;
     const raw = node.computed[prop];
     if (!raw) continue;
     const hex = normalizeColorToHex(raw);
@@ -51,6 +122,32 @@ function auditNode(
       actual: `${prop}: ${hex}`,
       nodeId: node.nodeId,
     });
+  }
+
+  return violations;
+}
+
+function auditNode(
+  node: AuditNodeInput,
+  rules: TokenRuleset,
+  colors: Set<string>,
+): Violation[] {
+  const violations: Violation[] = [];
+  const fonts = new Set(rules.fontSizes);
+  const radii = new Set(rules.borderRadii);
+
+  const buttonSpec = rules.components?.button;
+  const semanticButton = usesSemanticButton(node, rules);
+
+  if (semanticButton && buttonSpec) {
+    violations.push(...auditButtonVariant(node, rules, buttonSpec));
+    const variant = buttonSpec.variants[resolveButtonVariant(node.classNames, buttonSpec)];
+    const auditedProps = new Set(
+      Object.keys(variant?.default ?? {}) as Array<keyof VariantStyleTokens>,
+    );
+    violations.push(...auditGenericColors(node, colors, auditedProps));
+  } else {
+    violations.push(...auditGenericColors(node, colors, new Set()));
   }
 
   const fontSize = node.computed.fontSize;

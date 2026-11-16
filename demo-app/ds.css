@@ -42,14 +42,25 @@ body {
   font-size: var(--ds-font-14);
   font-weight: 600;
   border-radius: var(--ds-radius-6);
-  border: 1px solid transparent;
-  background: var(--ds-primary);
-  color: #ffffff;
   cursor: pointer;
 }
 
-.ds-btn:hover {
+.ds-btn--primary,
+.ds-btn:not(.ds-btn--secondary) {
+  border: 1px solid transparent;
+  background: var(--ds-primary);
+  color: #ffffff;
+}
+
+.ds-btn--primary:hover,
+.ds-btn:not(.ds-btn--secondary):hover {
   background: var(--ds-primary-hover);
+}
+
+.ds-btn--secondary {
+  border: 1px solid var(--ds-border);
+  background: var(--ds-surface);
+  color: var(--ds-text-primary);
 }
 
 .ds-card {

@@ -57,6 +57,7 @@ function collectAuditNodes(): {
       computed: {
         color: style.color,
         backgroundColor: style.backgroundColor,
+        borderColor: style.borderColor,
         fontSize: style.fontSize,
         borderRadius: style.borderRadius,
       },

@@ -18,6 +18,26 @@ const apexRules: TokenRuleset = {
   fontSizes: ["12px", "14px", "16px", "24px"],
   borderRadii: ["6px", "12px"],
   allowedComponents: [".ds-btn", ".ds-card", ".ds-input", ".ds-badge"],
+  components: {
+    button: {
+      baseClass: "ds-btn",
+      fallbackVariant: "primary",
+      variants: {
+        primary: {
+          matchAnyClass: ["ds-btn--primary"],
+          default: { backgroundColor: "primary", color: "surface" },
+        },
+        secondary: {
+          matchAnyClass: ["ds-btn--secondary"],
+          default: {
+            backgroundColor: "surface",
+            color: "textPrimary",
+            borderColor: "border",
+          },
+        },
+      },
+    },
+  },
 };
 
 /** Mirrors the 7 planted violations in demo-app/index.html (computed style snapshot). */
@@ -25,7 +45,7 @@ const demoViolations: AuditNodeInput[] = [
   {
     nodeId: "v1",
     tagName: "BUTTON",
-    classNames: ["ds-btn", "btn-drift"],
+    classNames: ["ds-btn", "ds-btn--primary", "btn-drift"],
     computed: {
       backgroundColor: "rgb(59, 130, 246)",
       color: "rgb(255, 255, 255)",
@@ -95,6 +115,30 @@ describe("runAudit", () => {
     expect(categories.filter((c) => c === "Typography")).toHaveLength(1);
     expect(categories.filter((c) => c === "Radius")).toHaveLength(1);
     expect(categories.filter((c) => c === "Component")).toHaveLength(2);
+  });
+
+  it("uses semantic expected copy for primary button drift", () => {
+    const result = runAudit(demoViolations.slice(0, 1), apexRules);
+    expect(result.violations[0]?.expected).toContain("primary");
+    expect(result.violations[0]?.expected).toContain("colors.primary");
+  });
+
+  it("passes compliant secondary button variant", () => {
+    const node: AuditNodeInput = {
+      nodeId: "ok-secondary",
+      tagName: "BUTTON",
+      classNames: ["ds-btn", "ds-btn--secondary"],
+      computed: {
+        backgroundColor: "rgb(255, 255, 255)",
+        color: "rgb(15, 23, 42)",
+        borderColor: "rgb(226, 232, 240)",
+        fontSize: "14px",
+        borderRadius: "6px",
+      },
+    };
+    const result = runAudit([node], apexRules);
+    expect(result.violations).toHaveLength(0);
+    expect(result.compliancePercent).toBe(100);
   });
 
   it("computes compliance from compliant nodes", () => {
