@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apex Metrics</title>
+    <link rel="stylesheet" href="ds.css" />
+    <style>
+      .btn-drift {
+        background: #3b82f6;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .card-drift {
+        border-radius: 20px;
+      }
+
+      .subtitle-drift {
+        font-size: 13px;
+      }
+
+      .delta-drift {
+        color: #3b82f6;
+        font-size: 14px;
+      }
+
+      .badge-drift {
+        background: #fef08a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <header class="layout__header">
+        <div>
+          <h1 class="layout__title">Apex Metrics</h1>
+          <p class="layout__subtitle subtitle-drift">Workspace overview · Last 30 days</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center">
+          <button type="button" id="export-raw">Export</button>
+          <button type="button" class="ds-btn btn-drift">Sync data</button>
+          <button type="button" class="ds-btn">Upgrade</button>
+        </div>
+      </header>
+
+      <section class="layout__grid" aria-label="Key metrics">
+        <article class="ds-card">
+          <p class="stat__label">MRR</p>
+          <p class="stat__value">$42.1k</p>
+          <span class="ds-badge badge-drift">+8.4%</span>
+        </article>
+        <article class="ds-card card-drift">
+          <p class="stat__label">Active seats</p>
+          <p class="stat__value">1,204</p>
+          <span class="ds-badge">Stable</span>
+        </article>
+        <article class="ds-card">
+          <p class="stat__label">Churn</p>
+          <p class="stat__value">1.2%</p>
+          <p class="delta-drift">▼ 0.3% vs prior period</p>
+        </article>
+      </section>
+
+      <section class="ds-card toolbar">
+        <div class="field" style="flex: 2">
+          <label for="q">Filter reports</label>
+          <input id="q" type="search" placeholder="Search…" />
+        </div>
+        <div class="field">
+          <label for="region">Region</label>
+          <select id="region" class="ds-input">
+            <option>Americas</option>
+            <option>EMEA</option>
+          </select>
+        </div>
+        <button type="button" class="ds-btn">Apply</button>
+      </section>
+    </div>
+    <!--
+      Planted violations (7) — verification checklist for DS Pulse:
+      1. Color — .btn-drift uses hardcoded background #3B82F6 (not in Apex palette).
+      2. Typography — .subtitle-drift uses 13px (off type scale).
+      3. Radius — .card-drift uses border-radius 20px (allowed: 6px, 12px).
+      4. Component — #export-raw <button> missing .ds-btn.
+      5. Component — #q <input> missing .ds-input.
+      6. Color — .delta-drift text color #3B82F6 (not in palette).
+      7. Color — .badge-drift background #FEF08A (text uses token primary).
+    -->
+  </body>
+</html>
