@@ -11,7 +11,8 @@ Portfolio project demonstrating **automated design system governance in the brow
 |-----|---------|
 | [SPEC.md](SPEC.md) | Spec index for Cursor |
 | [FEATURES.md](FEATURES.md) | FEAT status, waves, handoff contract |
-| [docs/GIT-WORKFLOW.md](docs/GIT-WORKFLOW.md) | Branches + Chrome test steps |
+| [docs/GIT-WORKFLOW.md](docs/GIT-WORKFLOW.md) | Branches, PRs, Chrome test before merge |
+| [docs/PROJECT-SUMMARY-AND-WORKFLOW.md](docs/PROJECT-SUMMARY-AND-WORKFLOW.md) | What we built + designer workflow |
 
 ## Open this project in Cursor
 
@@ -21,14 +22,21 @@ Portfolio project demonstrating **automated design system governance in the brow
 
 ### Demo app
 
-Open [`demo-app/index.html`](demo-app/index.html) in Chrome.
+```bash
+cd demo-app
+npx --yes serve . -l 3000
+```
+
+Open **http://localhost:3000** in Chrome.
 
 ### Extension
 
 ```bash
 cd extension
 npm install
-npm run dev
+npm run build
 ```
 
-Load unpacked from `.output/chrome-mv3-dev` in `chrome://extensions`, open the demo tab, use the side panel **Scan Current Page**.
+Load unpacked from **`.output/chrome-mv3`** at `chrome://extensions`, open the demo tab, side panel → **Scan Current Page**.
+
+Full steps: [docs/GIT-WORKFLOW.md](docs/GIT-WORKFLOW.md).

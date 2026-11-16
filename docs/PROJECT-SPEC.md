@@ -17,8 +17,9 @@ Build is phased via [FEATURES.md](../FEATURES.md).
 | fontSizes | `12px`, `14px`, `16px`, `24px` |
 | borderRadii | `6px`, `12px` |
 | allowedComponents | `.ds-btn`, `.ds-card`, `.ds-input`, `.ds-badge` |
+| components.button (FEAT-05+) | Variants **primary** / **secondary** with token bindings per CSS property; plain `.ds-btn` → primary |
 
-Copy to `extension/public/tokens.json` when building the extension.
+Keep `demo-app/tokens.json` and `extension/public/tokens.json` in sync. The content script also **bundles** tokens at build time — run `npm run build` in `extension/` after token changes.
 
 ## Technical constraints
 
@@ -33,5 +34,5 @@ Copy to `extension/public/tokens.json` when building the extension.
 demo-app/     tokens.json, ds.css, index.html
 extension/    WXT entrypoints, lib/audit/, public/tokens.json
 features/     FEAT-XX specs
-docs/         PROJECT-SPEC, GIT-WORKFLOW, BUILD-PROMPTS
+docs/         PROJECT-SPEC, GIT-WORKFLOW, BUILD-PROMPTS, PROJECT-SUMMARY-AND-WORKFLOW
 ```

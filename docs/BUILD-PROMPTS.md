@@ -35,3 +35,15 @@ Build FEAT-04 per features/FEAT-04-overlays.md.
 #ds-linter-overlay-root closed shadow DOM; highlight all toggle; click row to scrollIntoView + pulse.
 Recalculate boxes on scroll and resize.
 ```
+
+## FEAT-05: Button variant semantic audit (Prompt 5)
+
+```text
+Build FEAT-05 per features/FEAT-05-component-variants.md and @SPEC.md.
+Extend demo-app/tokens.json with components.button variants (primary, secondary; plain .ds-btn → primary).
+Update demo-app ds.css and index.html (.ds-btn--primary, .ds-btn--secondary).
+Audit engine: semantic Expected for .ds-btn (e.g. primary backgroundColor → colors.primary).
+Copy tokens to extension/public/tokens.json; Vitest for variants.
+Open PR; do not merge to main — I merge on GitHub.
+Chrome-test per docs/GIT-WORKFLOW.md before opening the PR.
+```
