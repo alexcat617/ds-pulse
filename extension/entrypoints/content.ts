@@ -13,6 +13,7 @@ import {
   type ContentResponse,
 } from "../lib/messages";
 import { OverlayRenderer } from "../lib/overlay/renderer";
+import tokenRules from "../public/tokens.json";
 
 let nodeCounter = 0;
 
@@ -65,11 +66,8 @@ function collectAuditNodes(): {
   return { nodes, map };
 }
 
-async function loadRuleset(): Promise<TokenRuleset> {
-  const url = chrome.runtime.getURL("/tokens.json");
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to load tokens.json (${res.status})`);
-  return (await res.json()) as TokenRuleset;
+function loadRuleset(): TokenRuleset {
+  return tokenRules as TokenRuleset;
 }
 
 export default defineContentScript({
@@ -125,7 +123,7 @@ export default defineContentScript({
           void (async () => {
             try {
               overlay.clear();
-              const rules = await loadRuleset();
+              const rules = loadRuleset();
               const { nodes, map } = collectAuditNodes();
               lastNodeMap = map;
               const result = runAudit(nodes, rules);

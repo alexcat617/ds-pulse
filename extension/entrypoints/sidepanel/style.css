@@ -9,6 +9,8 @@ body {
   margin: 0;
   padding: 16px;
   min-width: 320px;
+  color: light-dark(#0f172a, #f1f5f9);
+  background: light-dark(#fff, #0f172a);
 }
 
 .header__title {
@@ -18,21 +20,22 @@ body {
 
 .header__subtitle {
   margin: 4px 0 0;
-  color: #64748b;
+  color: light-dark(#64748b, #94a3b8);
   font-size: 12px;
 }
 
 .score {
   margin: 20px 0;
   padding: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid light-dark(#e2e8f0, #334155);
   border-radius: 8px;
+  background: light-dark(#fff, #1e293b);
 }
 
 .score__label {
   margin: 0;
   font-size: 12px;
-  color: #64748b;
+  color: light-dark(#64748b, #94a3b8);
 }
 
 .score__value {
@@ -51,10 +54,16 @@ body {
   flex: 1;
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid #cbd5e1;
-  background: #fff;
+  border: 1px solid light-dark(#cbd5e1, #475569);
+  background: light-dark(#fff, #334155);
+  color: light-dark(#0f172a, #f8fafc);
   cursor: pointer;
   font: inherit;
+  font-weight: 600;
+}
+
+.btn:hover {
+  background: light-dark(#f1f5f9, #475569);
 }
 
 .btn--primary {
@@ -63,10 +72,14 @@ body {
   color: #fff;
 }
 
+.btn--primary:hover {
+  background: #1d4ed8;
+}
+
 .meta {
   margin: 0 0 12px;
   font-size: 12px;
-  color: #64748b;
+  color: light-dark(#64748b, #94a3b8);
 }
 
 .violations {
@@ -81,10 +94,11 @@ body {
 .violations li {
   padding: 8px;
   border-radius: 6px;
-  border: 1px solid #fecaca;
-  background: #fef2f2;
+  border: 1px solid light-dark(#fecaca, #b91c1c);
+  background: light-dark(#fef2f2, #450a0a);
   font-size: 12px;
   cursor: pointer;
+  color: inherit;
 }
 
 .toggle {
@@ -102,5 +116,5 @@ body {
 
 .pair span {
   font-weight: 600;
-  color: #64748b;
+  color: light-dark(#64748b, #94a3b8);
 }
